@@ -1,13 +1,30 @@
 const axios = require("axios");
 
-const SEARCH_API = "https://pfm-search.sytes.net/search?q=";
+const SEARCH_API = "https://pfm-search.sytes.net/search?query=";
+
+/**
+ * Send search results to a website via POST request.
+ * @param {string} webUrl - The target URL where results will be sent.
+ * @param {Object} results - The search results to send.
+ * @returns {Promise<void>}
+ */
+async function SendTo(webUrl, results) {
+    try {
+        const response = await axios.post(webUrl, { results });
+
+        console.log("Response:", response.data);
+        console.log("Request was successful");
+    } catch (error) {
+        console.error("Error sending results:", error.message);
+    }
+}
 
 /**
  * Fetch search results in HTML format.
  * @param {string} query - The search query.
  * @returns {Promise<string>} - HTML formatted search results.
  */
-async function getHtmlResults(query) {
+async function html(query) {
     try {
         const response = await axios.get(`${SEARCH_API}${encodeURIComponent(query)}`);
         const results = response.data;
@@ -30,7 +47,7 @@ async function getHtmlResults(query) {
  * @param {string} query - The search query.
  * @returns {Promise<string>} - Text formatted search results.
  */
-async function getTextResults(query) {
+async function text(query) {
     try {
         const response = await axios.get(`${SEARCH_API}${encodeURIComponent(query)}`);
         const results = response.data;
@@ -47,4 +64,4 @@ async function getTextResults(query) {
 }
 
 // Export functions as a module
-module.exports = { getHtmlResults, getTextResults };
+module.exports = { html, text, SendTo };
